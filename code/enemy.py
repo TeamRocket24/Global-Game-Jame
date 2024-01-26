@@ -4,7 +4,15 @@ from entity import Entity
 from support import *
 
 class Enemy(Entity):
-	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp):
+	def __init__(
+		self,
+		monster_name,
+		pos,
+		groups,
+		obstacle_sprites,
+		damage_player,
+		trigger_death_particles,
+		add_exp ):
 
 		# general setup
 		super().__init__(groups)
