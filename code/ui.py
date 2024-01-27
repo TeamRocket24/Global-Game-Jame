@@ -61,57 +61,57 @@ class UI:
 
 
 	def show_npc_dialogue(self,npc):
-		w = 120
-		h = 640
+		x = DIALOG_X
+		y = DIALOG_Y
 		max_width = 0
 		max_height = 0
-		text_font = pygame.font.Font(None, 30)
+		text_font = pygame.font.Font(None, DIALOG_TEXT_SIZE)
 		text_dialogue = npc.get_dialogue()
 
 		# bg_dialogue = pygame.Rect(100, 630, 1000, 80)
 		pygame.draw.rect(
 			self.display_surface, 
-			(255, 240, 210), 
-			(100, 630, 1000, 80),
+			DIALOG_BG_COLOR, 
+			(100, 630, DIALOG_RECT_WIDTH, DIALOG_RECT_HEIGHT),
 			0,
-			10
+			DIALOG_RECT_RADIUS
 		)
 
 		pygame.draw.rect(
 			self.display_surface, 
-			(10, 10, 10), 
-			(100, 630, 1000, 80),
-			5,
-			10
+			DIALOG_BORDER_COLOR, 
+			(100, 630, DIALOG_RECT_WIDTH, DIALOG_RECT_HEIGHT),
+			DIALOG_BORDER_SIZE,
+			DIALOG_RECT_RADIUS
 		)
 
 		for j in text_dialogue.split(" "):
-			text = text_font.render(j+" ", True, [0, 0, 0])
-			if w + text.get_width() > 1000:
-				h += text.get_height()
-				w = 120
-			textRect = text.get_rect(topleft = [w, h])
-			w += text.get_width()
-			if w > max_width: max_width = w
-			if h > max_height: max_height = h
+			text = text_font.render(j+" ", True, DIALOG_TEXT_COLOR)
+			if x + text.get_width() > DIALOG_RECT_WIDTH:
+				x += text.get_height()
+				y = DIALOG_X
+			textRect = text.get_rect(topleft = [x, y])
+			x += text.get_width()
+			if x > max_width: max_width = x
+			if y > max_height: max_height = y
 			self.display_surface.blit(text, textRect)
 
 
-		button_font = pygame.font.Font(None, 30)
+		button_font = pygame.font.Font(None, DIALOG_BUTTON_SIZE)
 		button_font.underline = True
 		if npc.has_more_dialogue():
-			button_surface = button_font.render("siguiente", True, (125, 125, 125))
+			button_surface = button_font.render("Continua...", True, DIALOG_BUTTON_COLOR)
 			button_width = button_surface.get_width()
 			self.display_surface.blit(
 				button_surface, 
-				(1100 - (button_width + 15), 680)
+				(DIALOG_BUTTON_X - button_width, DIALOG_BUTTON_Y)
 			)
 		else:
-			button_surface = button_font.render("Dejar de Hablar", True, (125, 125, 125))
+			button_surface = button_font.render("Adios !", True, DIALOG_BUTTON_COLOR)
 			button_width = button_surface.get_width()
 			self.display_surface.blit(
 				button_surface, 
-				(1100 - (button_width + 15), 680)
+				(DIALOG_BUTTON_X - button_width, DIALOG_BUTTON_Y)
 			)
 
 	def show_game_over(self):
