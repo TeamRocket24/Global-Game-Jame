@@ -27,7 +27,11 @@ class Game:
 					sys.exit()
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					print(event.pos)
+
 				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_SPACE and self.level.is_game_over:
+						self.level = Level()
+
 					if event.key == pygame.K_m:
 						self.level.toggle_menu()
 

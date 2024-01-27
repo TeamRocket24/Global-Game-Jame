@@ -19,6 +19,7 @@ class Level:
 		# get the display surface 
 		self.display_surface = pygame.display.get_surface()
 		self.game_paused = False
+		self.is_game_over = False
 
 		# sprite group setup
 		self.visible_sprites = YSortCameraGroup()
@@ -194,8 +195,13 @@ class Level:
 		self.visible_sprites.custom_draw(self.player)
 		self.ui.display(self.player, self.npc_sprites)
 		
-		if self.game_paused:
+		if self.game_paused and self.player.health > 0:
 			self.upgrade.display()
+
+		elif self.player.health <= 0:
+			self.ui.show_game_over()
+			self.player.hidden()
+			self.is_game_over = True
 		else:
 			self.visible_sprites.update()
 			self.visible_sprites.enemy_update(self.player)

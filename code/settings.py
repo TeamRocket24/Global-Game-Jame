@@ -7,11 +7,15 @@ HITBOX_OFFSET = {
 	'player': -26,
 	'object': -40,
 	'grass': -10,
-	'invisible': 0}
+	'invisible': 0,
+	"arbustos": -10,
+	"terreno": 0,
+	"Arboles": 0
+	}
 
 # ui 
 BAR_HEIGHT = 20
-HEALTH_BAR_WIDTH = 200
+HEALTH_BAR_WIDTH = 100
 ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
 UI_FONT = '../graphics/font/joystix.ttf'
@@ -35,7 +39,7 @@ BAR_COLOR_SELECTED = '#111111'
 UPGRADE_BG_COLOR_SELECTED = '#EEEEEE'
 
 # Dialogue Box
-
+DIALOG_BG_COLOR = [255, 255, 255]
 
 # weapons 
 weapon_data = {
@@ -58,7 +62,7 @@ npc_data = {
  	"la_pura" : { 
  		"graphic": "../graphics/test/player.png",
  		"dialogue": [
- 			"Hola hijito como estas",
+ 			"Hola hijito como estas aaaaaaaa a asdajs hdjash djahsjkhd ashda sgdasdasdasgdfa hsgdfas dfgasdgfasg dasf dhgafshgdfas fdha fsgdahsfhdafshgd",
  			"espero que hayas pasado una linda susna",
  			"tegno sueño, adios..."
  		]

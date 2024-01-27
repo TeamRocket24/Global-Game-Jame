@@ -31,10 +31,10 @@ class Player(Entity):
 
 
 		# stats
-		self.stats = {'health': 100,'energy':60,'attack': 4,'speed': 10}
-		self.max_stats = {'health': 300, 'energy': 140, 'attack': 20, 'speed': 10}
+		self.stats = {'health': 100,'energy':60,'attack': 4,'speed': 30}
+		self.max_stats = {'health': 300, 'energy': 140, 'attack': 20, 'speed': 30}
 		self.upgrade_cost = {'health': 100, 'energy': 100, 'attack': 100, 'speed': 100}
-		self.health = self.stats['health'] * 0.5
+		self.health = self.stats['health']
 		self.energy = self.stats['energy'] * 0.8
 		self.exp = 5000
 		self.speed = self.stats['speed']
@@ -51,6 +51,10 @@ class Player(Entity):
 		# Dialogue
 		self.is_dialoguing = {}
 		self.npc_dialoguing = None
+
+	def hidden(self):
+		self.kill()
+
 
 	def set_is_dialoguing(self, key, value):
 		self.is_dialoguing[key] = value
