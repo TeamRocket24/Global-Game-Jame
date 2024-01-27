@@ -1,4 +1,4 @@
-import pygame 
+# import pygame 
 from settings import *
 from tile import Tile
 from player import Player
@@ -43,14 +43,14 @@ class Level:
 
 	def create_map(self):
 		layouts = {
-			'boundary': import_csv_layout('../map/map_FloorBlocks.csv'),
-			'grass': import_csv_layout('../map/map_Grass.csv'),
-			'object': import_csv_layout('../map/map_Objects.csv'),
+			'boundary': import_csv_layout('../map_alvaro/map_floorBlocks.csv'),
+			'grass': import_csv_layout('../map_alvaro/map_arbustos.csv'),
+			'object': import_csv_layout('../map_alvaro/map_arboles_casas.csv'),
 			'entities': import_csv_layout('../map/map_Entities.csv')
 		}
 		graphics = {
 			'grass': import_folder('../graphics/Grass'),
-			'objects': import_folder('../graphics/objects')
+			# 'objects': import_folder('../graphics/new_objects')
 		}
 
 
@@ -61,7 +61,7 @@ class Level:
 						x = col_index * TILESIZE
 						y = row_index * TILESIZE
 						if style == 'boundary':
-							Tile((x,y),[self.obstacle_sprites],'invisible')
+							Tile((x,y),[self.obstacle_sprites],'invisible') 
 						if style == 'grass':
 							random_grass_image = choice(graphics['grass'])
 							Tile(
@@ -75,7 +75,8 @@ class Level:
 								random_grass_image)
 
 						if style == 'object':
-							surf = graphics['objects'][int(col)]
+							# surf = graphics['objects'][int(col)]
+							surf = pygame.image.load(f"../graphics/new_objects/{col}.png")
 							Tile(
 								(x,y),
 								[
@@ -121,7 +122,7 @@ class Level:
 									self.obstacle_sprites,
 									self.damage_player,
 									self.trigger_death_particles,
-									self.add_exp
+									self.add_yuka
 								)
 
 	def create_attack(self):
@@ -183,9 +184,9 @@ class Level:
 			self.visible_sprites
 		)
 
-	def add_exp(self,amount):
+	def add_yuka(self,amount):
 
-		self.player.exp += amount
+		self.player.yuka += amount
 
 	def toggle_menu(self):
 
@@ -220,7 +221,7 @@ class YSortCameraGroup(pygame.sprite.Group):
 		self.offset = pygame.math.Vector2()
 
 		# creating the floor
-		self.floor_surf = pygame.image.load('../graphics/tilemap/ground.png').convert()
+		self.floor_surf = pygame.image.load('../map_alvaro/ground.png').convert()
 		self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
 	def custom_draw(self,player):

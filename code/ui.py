@@ -39,15 +39,18 @@ class UI:
 		pygame.draw.rect(self.display_surface,color,current_rect)
 		pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,bg_rect,3)
 
-	def show_exp(self,exp):
-		text_surf = self.font.render(str(int(exp)),False,TEXT_COLOR)
+	def show_yuka(self,yuka):
+		the_yuka = pygame.image.load("../graphics/Moneda.png")
+		text_surf = self.font.render("x" + str(int(yuka)),False,TEXT_COLOR)
 		x = self.display_surface.get_size()[0] - 20
 		y = self.display_surface.get_size()[1] - 20
 		text_rect = text_surf.get_rect(bottomright = (x,y))
+		the_yuka_rect = the_yuka.get_rect(bottomright = (x, y))
 
-		pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(20,20))
-		self.display_surface.blit(text_surf,text_rect)
-		pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(20,20),3)
+		# pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(20, 20))
+		self.display_surface.blit(the_yuka, the_yuka_rect.inflate(50, 0))
+		self.display_surface.blit(text_surf,text_rect.inflate(-10, 0))
+		# pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(20,20),3)
 
 	def show_npc_label(self, npc_name, *pos):
 		font = pygame.font.Font(None, 50)
@@ -86,10 +89,10 @@ class UI:
 		)
 
 		for j in text_dialogue.split(" "):
-			text = text_font.render(j+" ", True, DIALOG_TEXT_COLOR)
-			if x + text.get_width() > DIALOG_RECT_WIDTH:
-				x += text.get_height()
-				y = DIALOG_X
+			text = text_font.render(j+" ", True, [0, 0, 0])
+			if x + text.get_width() > 1000:
+				y += text.get_height()
+				x = 120
 			textRect = text.get_rect(topleft = [x, y])
 			x += text.get_width()
 			if x > max_width: max_width = x
@@ -107,7 +110,7 @@ class UI:
 				(DIALOG_BUTTON_X - button_width, DIALOG_BUTTON_Y)
 			)
 		else:
-			button_surface = button_font.render("Adios !", True, DIALOG_BUTTON_COLOR)
+			button_surface = button_font.render("Adios.!", True, DIALOG_BUTTON_COLOR)
 			button_width = button_surface.get_width()
 			self.display_surface.blit(
 				button_surface, 
@@ -167,7 +170,7 @@ class UI:
 		)
 		# self.show_bar(player.energy,player.stats['energy'],self.energy_bar_rect,ENERGY_COLOR)
 
-		self.show_exp(player.exp)
+		self.show_yuka(player.yuka)
 
 		self.weapon_overlay(player.weapon_index,not player.can_switch_weapon)
 
