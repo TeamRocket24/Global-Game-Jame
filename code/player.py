@@ -45,7 +45,7 @@ class Player(Entity):
 		self.invulnerability_duration = 500
 
 		# import a sound
-		self.weapon_attack_sound = pygame.mixer.Sound('../audio/sword.wav')
+		self.weapon_attack_sound = pygame.mixer.Sound('../audio/sward.mp3')
 		self.weapon_attack_sound.set_volume(0.4)
 
 		# Dialogue
@@ -104,14 +104,14 @@ class Player(Entity):
 
 			# attack input 
 			if keys[pygame.K_SPACE]:
-				if True in self.is_dialoguing.values() and self.npc_dialoguing:
+				if  self.npc_dialoguing:
 					if self.npc_dialoguing.has_more_dialogue(): 
 						self.npc_dialoguing.next_dialogue()
 
 					else:
 						self.npc_dialoguing.close_dialogue(self)
 
-				else:
+				if self.can_move:
 					self.attacking = True
 					self.attack_time = pygame.time.get_ticks()
 					self.create_attack()

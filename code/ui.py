@@ -63,13 +63,13 @@ class UI:
 		)
 
 
-	def show_npc_dialogue(self,npc):
+	def show_npc_dialogue(self,dialogue):
 		x = DIALOG_X
 		y = DIALOG_Y
 		max_width = 0
 		max_height = 0
 		text_font = pygame.font.Font(None, DIALOG_TEXT_SIZE)
-		text_dialogue = npc.get_dialogue()
+		text_dialogue = dialogue.get_dialogue()
 
 		# bg_dialogue = pygame.Rect(100, 630, 1000, 80)
 		pygame.draw.rect(
@@ -88,6 +88,11 @@ class UI:
 			DIALOG_RECT_RADIUS
 		)
 
+		name_font = pygame.font.Font(None, DIALOG_TEXT_SIZE - 10)
+		name = name_font.render(dialogue.npc.name, True, [0, 0, 0])
+		name_rect = name.get_rect(topleft = [x, y-20])
+		self.display_surface.blit(name, name_rect)
+
 		for j in text_dialogue.split(" "):
 			text = text_font.render(j+" ", True, [0, 0, 0])
 			if x + text.get_width() > 1000:
@@ -100,10 +105,10 @@ class UI:
 			self.display_surface.blit(text, textRect)
 
 
-		button_font = pygame.font.Font(None, DIALOG_BUTTON_SIZE)
+		button_font = pygame.font.Font(None, DIALOG_BUTTON_SIZE - 5)
 		button_font.underline = True
-		if npc.has_more_dialogue():
-			button_surface = button_font.render("Continua...", True, DIALOG_BUTTON_COLOR)
+		if dialogue.has_more_dialogue():
+			button_surface = button_font.render("Pulsa espacio para continuar", True, DIALOG_BUTTON_COLOR)
 			button_width = button_surface.get_width()
 			self.display_surface.blit(
 				button_surface, 
@@ -161,7 +166,7 @@ class UI:
 
 		self.display_surface.blit(weapon_surf,weapon_rect)
 
-	def display(self,player, npc_sprites):
+	def display(self,player, npc_sprites, enemy_splites):
 		self.show_bar(
 			player.health,
 			player.stats['health'],
@@ -174,6 +179,6 @@ class UI:
 
 		self.weapon_overlay(player.weapon_index,not player.can_switch_weapon)
 
-		if player.npc_dialoguing:
+		if player.npc_dialoguing and not player.npc_dialoguing.is_empty():
 			npc = player.npc_dialoguing
 			self.show_npc_dialogue(npc)

@@ -11,11 +11,10 @@ class Game:
 		self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
 		pygame.display.set_caption('Zelda')
 		self.clock = pygame.time.Clock()
-		print(self.clock)
 		self.level = Level()
 
 		# sound 
-		main_sound = pygame.mixer.Sound('../audio/main.ogg')
+		main_sound = pygame.mixer.Sound('../audio/dnacing_dragon.mp3')
 		main_sound.set_volume(0.5)
 		main_sound.play(loops = -1)
 	

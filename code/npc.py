@@ -1,28 +1,36 @@
 from entity import Entity
 import pygame
 from dialogue import Dialogue
+from settings import *
 
 class NPC(Entity):
 	def __init__(
 		self,
-		npc_name,
+		npc_id,
 		npc_data,
+		img_path,
 		pos,
-		groups 
+		groups,
+		obstacle_sprites
 	):
-
 		# general setup
 		super().__init__(groups)
 		self.sprite_type = 'npc'
 
 		# graphics
 		self.status = 'idle'
-		self.image = pygame.image.load(npc_data["graphic"])
+		self.image = pygame.image.load(img_path)
 		self.rect = self.image.get_rect(topleft = pos)
+		# self.import_graphics(monster_name)
+		# self.image = self.animations[self.status][self.frame_index]
 
 		# stats
-		self.name = npc_name
+		self.name = npc_data["name"]
 		self.notice_radius = 100
+
+		# movement
+		self.hitbox = self.rect.inflate(0,-10)
+		self.obstacle_sprites = obstacle_sprites
 
 		# Dialogue
 		self.finish_dialogue = False
@@ -38,8 +46,21 @@ class NPC(Entity):
 		# 
 		# Si no tiene ninguna de las anteriores
 		# entonces que tenga el dialogo por default
-		self.dialogue_list = npc_data["dialogue"]
+		self.dialogue_list = None
+
+		mission = [m["npc_dialogue"] for m in mision_data if npc_id == m["npc_id"] and not m["is_completed"]]
+		if len(mission) > 0:
+			self.dialogue_list = mission[0]
+		else:
+			self.dialogue_list = npc_data["dialogue"]
+		 
 		self.dialogue = Dialogue(self.dialogue_list, self)
+
+	def import_graphics(self,name):
+		self.animations = {'idle':[],'move_left':[], 'move_right':[],'attack':[]}
+		main_path = f'../graphics/monsters/{name}/'
+		for animation in self.animations.keys():
+			self.animations[animation] = import_folder(main_path + animation)
 
 
 	def get_player_distance_direction(self,player):

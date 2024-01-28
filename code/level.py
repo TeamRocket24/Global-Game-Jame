@@ -11,15 +11,18 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from upgrade import Upgrade
 from npc import NPC
-from settings import npc_data
+from settings import NPC_DATA
 
 class Level:
 	def __init__(self):
 
 		# get the display surface 
+		self.player_generated = False
 		self.display_surface = pygame.display.get_surface()
 		self.game_paused = False
 		self.is_game_over = False
+		self.deaths = {'compinche_eugenio': 0, 'conejo':0,'lobo':0, "unicornio":0, "pollo":0, "ardilla":0, "ninja":0, "bandido":0, "ninja_boss": 0, "eugenio": 0, "soldado": 0}
+		self.npcs_list = NPC_DATA.keys()
 
 		# sprite group setup
 		self.visible_sprites = YSortCameraGroup()
@@ -41,12 +44,14 @@ class Level:
 		# particles
 		self.animation_player = AnimationPlayer()
 
+		self.monster_name = None
+
 	def create_map(self):
 		layouts = {
 			'boundary': import_csv_layout('../map_news/map_floorBlocks.csv'),
 			# 'grass': import_csv_layout('../map_news/map_arbustos.csv'),
 			'object': import_csv_layout('../map_news/map_arboles_casas.csv'),
-			'entities': import_csv_layout('../map/map_Entities.csv')
+			'entities': import_csv_layout('../map_news/map_entities.csv')
 		}
 		graphics = {
 			# 'grass': import_folder('../graphics/Grass'),
@@ -86,19 +91,7 @@ class Level:
 							)
 
 						if style == 'entities':
-							if col == '394':
-								cont = 100
-								for name in npc_data.keys():
-									cont += 50
-
-									NPC(
-										name,
-										npc_data[name],
-										(400 + cont, 400 + cont * 2),
-										[self.visible_sprites, self.npc_sprites],
-									)
-
-								print((x, y))
+							if not self.player_generated:
 								self.player = Player(
 									(450, 400),
 									[self.visible_sprites],
@@ -106,22 +99,50 @@ class Level:
 									self.create_attack,
 									self.destroy_attack,
 								)
+								self.player_generated = True
+
+							elif col in self.npcs_list:
+								npc_img_path = f"../graphics/npcs/{col}.png"
+
+								NPC(
+									col,
+									NPC_DATA[col],
+									npc_img_path,
+									(x,y),
+									[
+										self.visible_sprites, 
+										self.npc_sprites,
+									],
+									self.obstacle_sprites
+								)
+
 
 							else:
-								if col == '390': monster_name = 'bamboo'
-								elif col == '391': monster_name = 'spirit'
-								elif col == '392': monster_name ='raccoon'
-								else: monster_name = 'squid'
-								
-								Enemy(
-									monster_name,
-									(x,y),
-									[self.visible_sprites,self.attackable_sprites],
-									self.obstacle_sprites,
-									self.damage_player,
-									self.trigger_death_particles,
-									self.add_yuka
-								)
+								if col == '9': self.monster_name = 'lobo'
+								elif col == '11': self.monster_name = 'lobo'
+								elif col == '20': self.monster_name = 'ninja'
+								elif col == '19': self.monster_name = 'ninja'
+								elif col == '8': self.monster_name ='pollo'
+								elif col == '4': self.monster_name ='unicornio'
+								elif col == '5': self.monster_name ='ardilla'
+								elif col == '17': self.monster_name ='ninja_boss'
+								elif col == '39': self.monster_name ='bandido'
+								elif col == '40': self.monster_name ='bandido'
+								elif col == '41': self.monster_name ='bandido'
+								elif col == '7': self.monster_name = 'conejo'
+								elif col == '33': self.monster_name ='compinche_eugenio'
+								else: self.monster_name = None
+
+								if self.monster_name:
+									Enemy(
+										self.monster_name,
+										(x,y),
+										[self.visible_sprites,self.attackable_sprites],
+										self.obstacle_sprites,
+										self.damage_player,
+										self.trigger_death_particles,
+										# self.add_yuka
+									)
 
 	def create_attack(self):
 		
@@ -176,11 +197,8 @@ class Level:
 
 	def trigger_death_particles(self,pos,particle_type):
 
-		self.animation_player.create_particles(
-			particle_type,
-			pos,
-			self.visible_sprites
-		)
+		self.deaths [particle_type]+=1
+		self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
 
 	def add_yuka(self,amount):
 
@@ -190,9 +208,29 @@ class Level:
 
 		self.game_paused = not self.game_paused 
 
+	def check_missions(self):
+		obj = {"anim":self.deaths['lobo' ]+self.deaths["conejo"]+self.deaths['ardilla']+self.deaths['unicornio']+self.deaths['pollo' ], "bandido":self.deaths["bandido"],"eugenio":self.deaths["eugenio"],"soldado":self.deaths["soldado"],"ninja":self.deaths["ninja"],}
+		missions = {"2" : {"anim":4}, "3":{"bandido":4}, "4":{"eugenio": 1, "soldado": 2}, "5":{"ninja":2}}
+		reward = {"2":10, "3":20, "4":50, "5":100}
+		for i, j in missions.items ():
+			m = len (j.keys ())
+			n = 0
+			for k in j.keys ():
+				#print (i, k)
+				if obj [k] >=missions[i][k]:
+					n+=1
+					for mission in mision_data:
+					    if mission["id"] == i:
+					        mission["is_completed"] = True
+					        # self.player.yuka += mission["yukas"]
+
+			# if n == m:
+			# 	self.add_yuka(reward[i])
+
+
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
-		self.ui.display(self.player, self.npc_sprites)
+		self.ui.display(self.player, self.npc_sprites, self.attackable_sprites)
 		
 		if self.game_paused and self.player.health > 0:
 			self.upgrade.display()
@@ -206,8 +244,9 @@ class Level:
 			self.visible_sprites.enemy_update(self.player)
 			self.visible_sprites.npc_update(self.player)
 			self.player_attack_logic()
-		
+			self.check_missions()
 
+		
 class YSortCameraGroup(pygame.sprite.Group):
 	def __init__(self):
 

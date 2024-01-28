@@ -3,6 +3,7 @@ from settings import *
 from entity import Entity
 from npc import NPC
 from support import *
+from dialogue import Dialogue
 
 class Enemy(Entity):
 	def __init__(
@@ -13,7 +14,8 @@ class Enemy(Entity):
 		obstacle_sprites,
 		damage_player,
 		trigger_death_particles,
-		add_yuka ):
+		# add_yuka
+	):
 
 		# general setup
 		super().__init__(groups)
@@ -30,10 +32,11 @@ class Enemy(Entity):
 		self.obstacle_sprites = obstacle_sprites
 
 		# stats
+		self.name = monster_name
 		self.monster_name = monster_name
 		monster_info = monster_data[self.monster_name]
 		self.health = monster_info['health']
-		self.yuka = monster_info['yuka']
+		# self.yuka = monster_info['yuka']
 		self.speed = monster_info['speed']
 		self.attack_damage = monster_info['damage']
 		self.resistance = monster_info['resistance']
@@ -47,7 +50,7 @@ class Enemy(Entity):
 		self.attack_cooldown = 400
 		self.damage_player = damage_player
 		self.trigger_death_particles = trigger_death_particles
-		self.add_yuka = add_yuka
+		# self.add_yuka = add_yuka
 
 		# invincibility timer
 		self.vulnerable = True
@@ -63,10 +66,16 @@ class Enemy(Entity):
 		self.attack_sound.set_volume(0.6)
 
 		# Dialogue
+		self.dialogue_list = monster_data[monster_name]["dialogue"]
+		self.dialogue = Dialogue(self.dialogue_list, self)
+		 
+		#my vars
+		self.direct = -1
+		self.anim= "idle"
 		
 
 	def import_graphics(self,name):
-		self.animations = {'idle':[],'move':[],'attack':[]}
+		self.animations = {'idle':[],'move_left':[], 'move_right':[],'attack':[]}
 		main_path = f'../graphics/monsters/{name}/'
 		for animation in self.animations.keys():
 			self.animations[animation] = import_folder(main_path + animation)
@@ -90,23 +99,42 @@ class Enemy(Entity):
 			if self.status != 'attack':
 				self.frame_index = 0
 			self.status = 'attack'
+			self.anim="attack"
+
+			
 		elif distance <= self.notice_radius:
 			self.status = 'move'
+
 		else:
 			self.status = 'idle'
+			self.anim="idle"
+			player.set_is_dialoguing(self.name, False)
+			if player.npc_dialoguing == self.dialogue:
+				player.set_npc_dialoguing(None)
+				self.dialogue.index_dialogue = 0
 
 	def actions(self,player):
 		if self.status == 'attack':
 			self.attack_time = pygame.time.get_ticks()
 			self.damage_player(self.attack_damage,self.attack_type)
 			self.attack_sound.play()
+			player.set_is_dialoguing(self.name, True)
+			player.set_npc_dialoguing(self.dialogue)
 		elif self.status == 'move':
 			self.direction = self.get_player_distance_direction(player)[1]
+			player.set_is_dialoguing(self.name, True)
+			player.set_npc_dialoguing(self.dialogue)
+			if self.direction [0] > 0:
+				self.direct = 1
+				self.anim="move_right"
+			if self.direction [0] < 0:
+				self.direct = -1
+				self.anim="move_left"
 		else:
 			self.direction = pygame.math.Vector2()
 
 	def animate(self):
-		animation = self.animations[self.status]
+		animation = self.animations[self.anim]
 		
 		self.frame_index += self.animation_speed
 		if self.frame_index >= len(animation):
@@ -148,7 +176,7 @@ class Enemy(Entity):
 		if self.health <= 0:
 			self.kill()
 			self.trigger_death_particles(self.rect.center,self.monster_name)
-			self.add_yuka(self.yuka)
+			# self.add_yuka(self.yuka)
 			self.death_sound.play()
 
 	def hit_reaction(self):

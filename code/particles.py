@@ -18,10 +18,21 @@ class AnimationPlayer:
 			'thunder': import_folder('../graphics/particles/thunder'),
 
 			# monster deaths
-			'squid': import_folder('../graphics/particles/smoke_orange'),
-			'raccoon': import_folder('../graphics/particles/raccoon'),
-			'spirit': import_folder('../graphics/particles/nova'),
-			'bamboo': import_folder('../graphics/particles/bamboo'),
+			'conejo': import_folder('../graphics/particles/smoke_orange'),
+			'unicornio': import_folder('../graphics/particles/raccoon'),
+			'ardilla': import_folder('../graphics/particles/nova'),
+			'lobo': import_folder('../graphics/particles/bamboo'),
+			'ninja': import_folder('../graphics/particles/bamboo'),
+			'ninja_boss': import_folder('../graphics/particles/bamboo'),
+			'eugenio': import_folder('../graphics/particles/bamboo'),
+			'soldado': import_folder('../graphics/particles/bamboo'),
+			'bandido': import_folder('../graphics/particles/bamboo'),
+			'pollo': import_folder('../graphics/particles/bamboo'),
+			'eugenio': import_folder('../graphics/particles/bamboo'),
+			'compinche_eugenio': import_folder('../graphics/particles/bamboo'),
+
+
+
 			
 			# leafs 
 			'leaf': (
@@ -76,3 +87,4 @@ class ParticleEffect(pygame.sprite.Sprite):
 
 	def update(self):
 		self.animate()
+
