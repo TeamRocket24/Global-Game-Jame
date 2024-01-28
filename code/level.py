@@ -43,13 +43,13 @@ class Level:
 
 	def create_map(self):
 		layouts = {
-			'boundary': import_csv_layout('../map_alvaro/map_floorBlocks.csv'),
-			'grass': import_csv_layout('../map_alvaro/map_arbustos.csv'),
-			'object': import_csv_layout('../map_alvaro/map_arboles_casas.csv'),
+			'boundary': import_csv_layout('../map_news/map_floorBlocks.csv'),
+			# 'grass': import_csv_layout('../map_news/map_arbustos.csv'),
+			'object': import_csv_layout('../map_news/map_arboles_casas.csv'),
 			'entities': import_csv_layout('../map/map_Entities.csv')
 		}
 		graphics = {
-			'grass': import_folder('../graphics/Grass'),
+			# 'grass': import_folder('../graphics/Grass'),
 			# 'objects': import_folder('../graphics/new_objects')
 		}
 
@@ -68,8 +68,6 @@ class Level:
 								(x,y),
 								[
 									self.visible_sprites,
-									self.obstacle_sprites,
-									self.attackable_sprites
 								],
 								'grass',
 								random_grass_image)
@@ -89,20 +87,20 @@ class Level:
 
 						if style == 'entities':
 							if col == '394':
-								cont = 0
+								cont = 100
 								for name in npc_data.keys():
 									cont += 50
 
 									NPC(
 										name,
-										(x + cont, y + cont),
-										npc_data[name]["graphic"],
+										npc_data[name],
+										(400 + cont, 400 + cont * 2),
 										[self.visible_sprites, self.npc_sprites],
-										npc_data[name]["dialogue"]
 									)
 
+								print((x, y))
 								self.player = Player(
-									(x,y),
+									(450, 400),
 									[self.visible_sprites],
 									self.obstacle_sprites,
 									self.create_attack,
@@ -221,7 +219,7 @@ class YSortCameraGroup(pygame.sprite.Group):
 		self.offset = pygame.math.Vector2()
 
 		# creating the floor
-		self.floor_surf = pygame.image.load('../map_alvaro/ground.png').convert()
+		self.floor_surf = pygame.image.load('../map_news/ground.png').convert()
 		self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
 	def custom_draw(self,player):

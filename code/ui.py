@@ -49,7 +49,7 @@ class UI:
 
 		# pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(20, 20))
 		self.display_surface.blit(the_yuka, the_yuka_rect.inflate(50, 0))
-		self.display_surface.blit(text_surf,text_rect.inflate(-10, 0))
+		self.display_surface.blit(text_surf,text_rect.inflate(-20, 0))
 		# pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(20,20),3)
 
 	def show_npc_label(self, npc_name, *pos):

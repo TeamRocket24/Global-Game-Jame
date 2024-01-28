@@ -51,10 +51,13 @@ class Player(Entity):
 		# Dialogue
 		self.is_dialoguing = {}
 		self.npc_dialoguing = None
+		self.can_move = True
 
 	def hidden(self):
 		self.kill()
 
+	def set_can_move(self, value):
+		self.can_move = value
 
 	def set_is_dialoguing(self, key, value):
 		self.is_dialoguing[key] = value
@@ -81,19 +84,19 @@ class Player(Entity):
 			keys = pygame.key.get_pressed()
 
 			# movement input
-			if keys[pygame.K_UP]:
+			if keys[pygame.K_UP] and self.can_move:
 				self.direction.y = -1
 				self.status = 'up'
-			elif keys[pygame.K_DOWN]:
+			elif keys[pygame.K_DOWN] and self.can_move:
 				self.direction.y = 1
 				self.status = 'down'
 			else:
 				self.direction.y = 0
 
-			if keys[pygame.K_RIGHT]:
+			if keys[pygame.K_RIGHT] and self.can_move:
 				self.direction.x = 1
 				self.status = 'right'
-			elif keys[pygame.K_LEFT]:
+			elif keys[pygame.K_LEFT] and self.can_move:
 				self.direction.x = -1
 				self.status = 'left'
 			else:
@@ -104,8 +107,9 @@ class Player(Entity):
 				if True in self.is_dialoguing.values() and self.npc_dialoguing:
 					if self.npc_dialoguing.has_more_dialogue(): 
 						self.npc_dialoguing.next_dialogue()
+
 					else:
- 						self.npc_dialoguing.close_dialogue(self)
+						self.npc_dialoguing.close_dialogue(self)
 
 				else:
 					self.attacking = True

@@ -64,8 +64,20 @@ weapon_data = {
 
 # enemy
 monster_data = {
-	'squid': {'health': 100,'yuka':3,'damage':20,'attack_type': 'slash', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-	'raccoon': {'health': 300,'yuka':1,'damage':40,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
+	'squid': {
+		'health': 100,
+		'yuka':3,
+		'damage':10,
+		'attack_type': 'slash', 
+		'attack_sound':'../audio/attack/slash.wav', 
+		'speed': 3, 
+		'resistance': 3, 
+		'attack_radius': 80, 
+		'notice_radius': 360,
+		'can_dialogue': True,
+		'dialogue' : []
+	},
+	'raccoon': {'health': 300,'yuka':1,'damage':10,'attack_type': 'claw',  'attack_sound':'../audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
 	'spirit': {'health': 100,'yuka':2,'damage':8,'attack_type': 'thunder', 'attack_sound':'../audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
 	'bamboo': {'health': 70,'yuka':1,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'../audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
@@ -74,20 +86,57 @@ monster_data = {
 npc_data = {
  	"la_pura" : { 
  		"graphic": "../graphics/test/player.png",
+ 		"let_move" : False,
  		"dialogue": [
  			"Hola hijito como estas aaaaaaaa a asdajs hdjash djahsjkhd ashda sgdasdasdasgdfa hsgdfas dfgasdgfasg dasf dhgafshgdfas fdha fsgdahsfhdafshgd",
  			"espero que hayas pasado una linda susna",
  			"tegno sueño, adios..."
+ 		],
+ 		# El npc reacciona al cumplimiento de misiones
+ 		# osea va a reaccionar cuando una mision ya este cumplida
+ 		"reactions": [
+			{
+ 				"mission_id": "",
+ 				"dialogue_reaction": [],
+ 				"completed": False
+ 			}
  		]
+ 		
  	},
  	"salinga" : { 
  		"graphic": "../graphics/test/player.png",
+ 		"let_move" : True,
  		"dialogue": [
  			"Hola, buenos dias !",
  			"Soy amiga de Marti, el es mi esritor favorito",
  			"Si lo ves dile por favor que lo quiero ver urgentemente please",
  			"vale gracias, adios !."
-
  		]
  	}
 }
+
+
+# Esta data es para guardar las misiones
+# El campo npc_name es para saber con que npc esta hablando el player
+# El cmapo npc_dialogue es el que contiene
+# el dialogo que va a decicir el npc
+# 
+# El player cuando se acerca a un npc primero se revisa
+# si el npc esta aqui en las misiones
+# si esta en las misioes renderiza el dialogo de las misiones
+# si no renderiza el de el npc por defecto
+mision_data = [
+	{
+		"id": "",
+		# Nombre de la mision
+		"name": "",
+		# Nombre del npc que da la mision
+		"npc_name": "",
+		# dialogo que habla el npc para dar la mision
+		"npc_dialogue": [],
+
+		"is_completed": False,
+
+	}
+
+ ]

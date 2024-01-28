@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from entity import Entity
+from npc import NPC
 from support import *
 
 class Enemy(Entity):
@@ -60,6 +61,9 @@ class Enemy(Entity):
 		self.death_sound.set_volume(0.6)
 		self.hit_sound.set_volume(0.6)
 		self.attack_sound.set_volume(0.6)
+
+		# Dialogue
+		
 
 	def import_graphics(self,name):
 		self.animations = {'idle':[],'move':[],'attack':[]}

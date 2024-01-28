@@ -11,7 +11,7 @@ class Game:
 		self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
 		pygame.display.set_caption('Zelda')
 		self.clock = pygame.time.Clock()
-
+		print(self.clock)
 		self.level = Level()
 
 		# sound 

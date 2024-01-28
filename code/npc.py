@@ -1,14 +1,15 @@
 from entity import Entity
 import pygame
+from dialogue import Dialogue
 
 class NPC(Entity):
 	def __init__(
 		self,
 		npc_name,
+		npc_data,
 		pos,
-		image,
-		groups,
-		dialogue ):
+		groups 
+	):
 
 		# general setup
 		super().__init__(groups)
@@ -16,7 +17,7 @@ class NPC(Entity):
 
 		# graphics
 		self.status = 'idle'
-		self.image = pygame.image.load(image)
+		self.image = pygame.image.load(npc_data["graphic"])
 		self.rect = self.image.get_rect(topleft = pos)
 
 		# stats
@@ -24,8 +25,21 @@ class NPC(Entity):
 		self.notice_radius = 100
 
 		# Dialogue
+		self.finish_dialogue = False
+		self.let_move = npc_data["let_move"]
 		self.index_dialogue = 0
-		self.dialogue_list = dialogue
+		# Comprobar si el nombre del npc esta en la lista
+		# de misiones y la mision no ha sido completada 
+		# y si esta agregar el dialogo de la mision
+		# 
+		# Si no se cumple lo anteriro 
+		# comprobar las reacciones del npc
+		# si tiene alguna reaccion poner su dialogo
+		# 
+		# Si no tiene ninguna de las anteriores
+		# entonces que tenga el dialogo por default
+		self.dialogue_list = npc_data["dialogue"]
+		self.dialogue = Dialogue(self.dialogue_list, self)
 
 
 	def get_player_distance_direction(self,player):
@@ -44,42 +58,25 @@ class NPC(Entity):
 	def get_status(self, player):
 		distance = self.get_player_distance_direction(player)[0]
 
-		if distance <= self.notice_radius:
+		if distance <= self.notice_radius and not self.finish_dialogue:
 			self.status = 'speak'
 			player.set_is_dialoguing(self.name, True)
-			player.set_npc_dialoguing(self)
-		
+			player.set_npc_dialoguing(self.dialogue)
+			player.set_can_move(self.let_move)
+
 		else:
 			self.status = 'idle'
 			player.set_is_dialoguing(self.name, False)
-			if player.npc_dialoguing == self:
+			if player.npc_dialoguing == self.dialogue:
 				player.set_npc_dialoguing(None)
-				self.index_dialogue = 0
+				self.dialogue.index_dialogue = 0
 
 
 
 	def actions(self,player):
 		if self.status == 'speak':
 			pass
-
-	def get_dialogue(self):
-		if len(self.dialogue_list) <= self.index_dialogue:
-			self.index_dialogue = len(self.dialogue_list) - 1
-		
-		text = self.dialogue_list[self.index_dialogue]
-		return text
-
-	def has_more_dialogue(self):
-		return self.index_dialogue < len(self.dialogue_list) - 1
-
-	def next_dialogue(self):
-		self.index_dialogue += 1
-
-	def close_dialogue(self, player):
-		self.status = 'idle'
-		player.set_is_dialoguing(self.name, False)
-		if player.npc_dialoguing == self:
-			player.set_npc_dialoguing(None)
+			
 
 	def npc_update(self,player):
 		self.get_status(player)
